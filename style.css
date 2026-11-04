@@ -527,3 +527,21 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 .profile-links a:hover .ic { transform: scale(1.15) rotate(-6deg); }
 .contact-card dt { display: flex; align-items: center; gap: 8px; }
 .contact-card dt .ic { color: var(--green-700); }
+
+/* =====================================================
+   Mobile header: brand on top, all links in one small row
+   ===================================================== */
+@media (max-width: 760px) {
+  html { scroll-padding-top: 92px; }
+  .nav-inner { flex-direction: column; align-items: stretch; gap: 0; padding: 10px 0 6px; min-height: 0; }
+  .brand { font-size: 0.95rem; }
+  .nav nav { width: 100%; gap: 6px; justify-content: space-between; }
+  .nav nav a { font-size: 0.74rem; padding: 7px 0; }
+  .nav nav a.nav-cta { font-size: 0.74rem; padding: 5px 11px; }
+  .nav-long { display: none; }
+}
+@media (max-width: 370px) {
+  .nav nav { gap: 4px; }
+  .nav nav a, .nav nav a.nav-cta { font-size: 0.66rem; }
+  .nav nav a.nav-cta { padding: 5px 8px; }
+}
