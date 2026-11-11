@@ -69,43 +69,19 @@
     window.addEventListener('resize', function () { if (window.innerWidth > 760) setMenu(false); });
   }
 
-  /* ---------- Night mode toggle ---------- */
-  var root = document.documentElement;
-  var themeBtn = document.querySelector('.theme-toggle');
-  var themeMeta = document.getElementById('theme-color');
-  function applyThemeUi() {
-    var dark = root.getAttribute('data-theme') === 'dark';
-    if (themeBtn) {
-      themeBtn.setAttribute('aria-pressed', dark ? 'true' : 'false');
-      themeBtn.setAttribute('aria-label', dark ? 'Switch to day mode' : 'Switch to night mode');
-    }
-    if (themeMeta) themeMeta.setAttribute('content', dark ? '#0a1810' : '#0d4a2b');
-  }
-  applyThemeUi();
-  if (themeBtn) {
-    themeBtn.addEventListener('click', function () {
-      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      root.classList.add('theme-anim');
-      root.setAttribute('data-theme', next);
-      try { localStorage.setItem('theme', next); } catch (e) {}
-      applyThemeUi();
-      setTimeout(function () { root.classList.remove('theme-anim'); }, 450);
-    });
-  }
-
   /* ---------- Active section in nav ---------- */
   var links = Array.prototype.slice.call(document.querySelectorAll('.nav nav a[href^="#"]'));
-  var byId = {};
-  links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
-  if (hasIO) {
-    var spy = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        links.forEach(function (a) { a.classList.remove('active'); });
-        var a = byId[e.target.id];
-        if (a) a.classList.add('active');
-      });
-    }, { rootMargin: '-45% 0px -50% 0px' });
-    document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+  var order = links.map(function (a) {
+    return { a: a, el: document.getElementById(a.getAttribute('href').slice(1)) };
+  }).filter(function (x) { return x.el; });
+  function spy() {
+    var line = window.innerHeight * 0.35, current = null;
+    order.forEach(function (x) {
+      if (x.el.getBoundingClientRect().top <= line) current = x;
+    });
+    order.forEach(function (x) { x.a.classList.toggle('active', x === current); });
   }
+  window.addEventListener('scroll', function () { requestAnimationFrame(spy); }, { passive: true });
+  window.addEventListener('resize', spy);
+  spy();
 })();
