@@ -51,7 +51,7 @@
   window.addEventListener('resize', update);
   update();
 
-  /* ---------- Mobile menu ---------- */
+  /* ---------- Mobile menu (dropdown) ---------- */
   var toggle = document.querySelector('.nav-toggle');
   function setMenu(open) {
     if (!nav || !toggle) return;
@@ -60,12 +60,12 @@
     toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   }
   if (toggle) {
-    toggle.addEventListener('click', function () { setMenu(!nav.classList.contains('open')); });
+    toggle.addEventListener('click', function (e) { e.stopPropagation(); setMenu(!nav.classList.contains('open')); });
     document.querySelectorAll('.nav nav a').forEach(function (a) {
       a.addEventListener('click', function () { setMenu(false); });
     });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
     document.addEventListener('click', function (e) { if (nav.classList.contains('open') && !nav.contains(e.target)) setMenu(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
     window.addEventListener('resize', function () { if (window.innerWidth > 760) setMenu(false); });
   }
 
@@ -80,6 +80,16 @@
       if (x.el.getBoundingClientRect().top <= line) current = x;
     });
     order.forEach(function (x) { x.a.classList.toggle('active', x === current); });
+    if (current && current !== lastActive) { lastActive = current; reveal(current.a); }
+  }
+  var lastActive = null;
+  var navEl = document.querySelector('.nav nav');
+  function reveal(a) {            // on phones the tabs scroll sideways: keep the active one visible
+    if (!navEl || navEl.scrollWidth <= navEl.clientWidth + 2) return;
+    var n = navEl.getBoundingClientRect(), r = a.getBoundingClientRect();
+    if (r.left < n.left + 12 || r.right > n.right - 40) {
+      navEl.scrollTo({ left: navEl.scrollLeft + (r.left - n.left) - 16, behavior: 'smooth' });
+    }
   }
   window.addEventListener('scroll', function () { requestAnimationFrame(spy); }, { passive: true });
   window.addEventListener('resize', spy);

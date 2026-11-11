@@ -193,7 +193,7 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 .affil p { margin: 0; }
 
 /* ---------- Research flow diagram ---------- */
-.flow { margin: 0 0 64px; background: var(--green-50); border: 1px solid var(--line); border-radius: 22px; padding: 36px; }
+.flow { margin: 0 0 64px; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 36px; }
 .flow figcaption { font-weight: 700; color: var(--green-900); font-size: 1.15rem; margin-bottom: 28px; }
 .flow-grid { display: grid; grid-template-columns: 1fr 56px 1fr 56px 1.15fr; align-items: center; }
 .flow-col { display: grid; gap: 12px; }
@@ -534,43 +534,54 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 .contact-card dt .ic { color: var(--accent); }
 
 /* =====================================================
-   Mobile header: brand on top, all links in one small row
+   Header: desktop keeps links right-aligned
    ===================================================== */
-@media (max-width: 760px) {
-  html { scroll-padding-top: 118px; }
-  .nav-inner { flex-direction: column; align-items: stretch; gap: 0; padding: 10px 0 6px; min-height: 0; }
-  .brand { font-size: 0.95rem; }
-  .nav nav { width: 100%; display: grid; grid-template-columns: repeat(4, auto); column-gap: 6px; row-gap: 0; justify-content: space-between; overflow: visible; }
-  .nav nav a { font-size: 0.82rem; padding: 6px 0; }
-  .nav nav a.nav-cta { font-size: 0.82rem; padding: 5px 14px; justify-self: end; margin: 2px 0 2px; }
-  .nav-long { display: none; }
-}
-@media (max-width: 370px) {
-  .nav nav { column-gap: 2px; }
-  .nav nav a, .nav nav a.nav-cta { font-size: 0.74rem; }
-  .nav nav a.nav-cta { padding: 5px 10px; }
-}
-
 .nav nav { margin-left: auto; }
 
-@media (max-width: 760px) {
-  .nav-inner { position: relative; }
-  .nav nav { margin-left: 0; }
-  
-  
-}
+/* =====================================================
+   Mobile header: name + menu button, links drop down
+   ===================================================== */
+.nav-toggle { display: none; }
 
 @media (max-width: 760px) {
-  .brand { margin-bottom: 6px; }
-  
-  
+  html { scroll-padding-top: 76px; }
+  .nav-inner { position: relative; flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; padding: 0; min-height: 62px; }
+  .brand { font-size: 1.05rem; }
+
+  .nav-toggle {
+    display: inline-flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+    width: 46px; height: 46px; margin-right: -10px; padding: 0;
+    background: transparent; border: 0; border-radius: 12px; cursor: pointer;
+  }
+  .nav-toggle span {
+    display: block; width: 24px; height: 2.5px; border-radius: 2px; background: var(--green-900);
+    transition: transform .28s cubic-bezier(.2,.7,.2,1), opacity .2s ease;
+  }
+  .nav.open .nav-toggle span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+  .nav.open .nav-toggle span:nth-child(2) { opacity: 0; }
+  .nav.open .nav-toggle span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+  /* the dropdown panel */
+  .nav nav {
+    display: none; position: absolute; top: 100%; left: -18px; right: -18px; width: auto; margin: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    max-height: calc(100vh - 70px); overflow-x: hidden; overflow-y: auto;
+    background: var(--surface); padding: 6px 24px 22px;
+    border-bottom: 1px solid var(--line); box-shadow: 0 22px 34px rgba(13, 74, 43, 0.14);
+  }
+  .nav.open nav { display: flex; animation: fadeUp .26s ease both; }
+  .nav nav a:not(.nav-cta) {
+    font-size: 1.08rem; padding: 15px 4px; border-bottom: 1px solid var(--line);
+  }
+  .nav nav a:not(.nav-cta):hover { border-bottom-color: var(--line); background: var(--green-50); }
+  .nav nav a.active:not(.nav-cta) { color: var(--accent); font-weight: 700; border-bottom-color: var(--line); box-shadow: inset 4px 0 0 var(--green-500); padding-left: 16px; }
+  .nav nav a.nav-cta { margin-top: 18px; padding: 14px 18px; text-align: center; font-size: 1.05rem; }
 }
 
 /* =====================================================
    Research advisor card
    ===================================================== */
 .advisor {
-  margin-top: 64px; scroll-margin-top: 90px;
   background: var(--surface); border: 1px solid var(--line); border-top: 6px solid var(--green-500);
   border-radius: 22px; padding: 40px 44px;
   transition: translate .25s ease, box-shadow .25s ease;
@@ -593,7 +604,7 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 .advisor .profile-links { margin: 0; }
 
 @media (max-width: 760px) {
-  .advisor { padding: 28px 22px; margin-top: 48px; }
+  .advisor { padding: 28px 22px; }
   .advisor-head { gap: 18px; }
   .monogram { width: 64px; height: 64px; font-size: 1.3rem; box-shadow: 0 0 0 5px var(--green-100); }
   .advisor-cols { grid-template-columns: 1fr; gap: 24px; margin: 24px 0; }
@@ -641,3 +652,5 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
   .advisor { padding: 28px 22px; }
 }
 .advisor-title { margin-bottom: 20px; }
+
+.node-in { background: var(--green-50); }
