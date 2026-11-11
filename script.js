@@ -7,7 +7,7 @@
   /* ---------- Scroll reveal ---------- */
   var selectors = [
     '.section h2', '.section .lead', '.two-col > *', '.flow', '.feature', '.trio article',
-    '.vision', '.pubs > li', '.pub-foot', '.awards article', '.cop', '.footer .wrap'
+    '.vision', '.advisor', '.pubs > li', '.pub-foot', '.awards article', '.cop', '.footer .wrap'
   ];
   var targets = Array.prototype.slice.call(document.querySelectorAll(selectors.join(',')));
 
@@ -67,6 +67,30 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
     document.addEventListener('click', function (e) { if (nav.classList.contains('open') && !nav.contains(e.target)) setMenu(false); });
     window.addEventListener('resize', function () { if (window.innerWidth > 760) setMenu(false); });
+  }
+
+  /* ---------- Night mode toggle ---------- */
+  var root = document.documentElement;
+  var themeBtn = document.querySelector('.theme-toggle');
+  var themeMeta = document.getElementById('theme-color');
+  function applyThemeUi() {
+    var dark = root.getAttribute('data-theme') === 'dark';
+    if (themeBtn) {
+      themeBtn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+      themeBtn.setAttribute('aria-label', dark ? 'Switch to day mode' : 'Switch to night mode');
+    }
+    if (themeMeta) themeMeta.setAttribute('content', dark ? '#0a1810' : '#0d4a2b');
+  }
+  applyThemeUi();
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.classList.add('theme-anim');
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      applyThemeUi();
+      setTimeout(function () { root.classList.remove('theme-anim'); }, 450);
+    });
   }
 
   /* ---------- Active section in nav ---------- */
