@@ -654,3 +654,11 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 .advisor-title { margin-bottom: 20px; }
 
 .node-in { background: var(--green-50); }
+
+/* second award video: mirrored layout (video on the left) */
+.awards article.award-video.reverse { grid-template-columns: 1.35fr 1fr; }
+.awards article.award-video.reverse .video-wrap { order: -1; }
+@media (max-width: 900px) {
+  .awards article.award-video.reverse { grid-template-columns: 1fr; }
+  .awards article.award-video.reverse .video-wrap { order: 0; }
+}
